@@ -21,6 +21,11 @@ public interface IClientView<POut, PIn> extends Runnable {
     void addCard(final ICard card);
 
     /**
+     * Adds a the card at the top of the grave yard to this view.
+     */
+    void addCardFromGraveyard();
+
+    /**
      * Gets called when a player has played (possibly multiple) sequences of cards
      * on the board.
      * 
@@ -100,6 +105,11 @@ public interface IClientView<POut, PIn> extends Runnable {
      * @param card The hand to remove from this players hand.
      */
     void removeCard(final ICard card);
+
+    /**
+     * Completely removes the card at the top of the grave yard from this view.
+     */
+    void removeCardFromGraveyard();
 
     /**
      * Gets called when this view should be terminated.

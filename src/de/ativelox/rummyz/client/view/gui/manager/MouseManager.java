@@ -249,6 +249,8 @@ public final class MouseManager implements MouseListener, MouseMotionListener, I
 		mCurrentlyBound = null;
 
 	    }
+	} else if (mCurrentlyHovered.getLabel() == EHoverLabel.GRAVEYARD_SNAP_AREA && mCurrentlyBound == null) {
+	    mSnapListener.onSnap(mCurrentlyHovered, null, 0, false);
 	}
     }
 

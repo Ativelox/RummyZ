@@ -50,6 +50,14 @@ public interface IGameControllerReceiver {
     void onCardsPlayed(final List<List<ICard>> cards, final int playerId);
 
     /**
+     * Signifies that the player with <tt>playerId</tt> has picked up the card at
+     * the top of the grave yard.
+     * 
+     * @param playerId The id of the player.
+     */
+    void onGraveyardPickup(final int playerId);
+
+    /**
      * Signifies that the player with <tt>playerId</tt> is ready to play.
      * 
      * @param playerId The id of the player.
@@ -64,7 +72,7 @@ public interface IGameControllerReceiver {
     void onTurnEnd(final int playerId);
 
     /**
-     * Signifies that the player with <tt>playerId</tt>> has won.
+     * Signifies that the player with <tt>playerId</tt> has won.
      * 
      * @param playerId The id of the player.
      */

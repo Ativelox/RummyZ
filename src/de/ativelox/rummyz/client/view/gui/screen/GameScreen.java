@@ -17,7 +17,6 @@ import de.ativelox.rummyz.client.view.gui.property.IElementAdjustCallback;
 import de.ativelox.rummyz.client.view.gui.property.IHighlightable;
 import de.ativelox.rummyz.client.view.gui.property.IHoverable;
 import de.ativelox.rummyz.client.view.gui.property.LayerConstants;
-import de.ativelox.rummyz.client.view.gui.utils.HalfStackHorizontalEvenlyDistributingElementContainer;
 import de.ativelox.rummyz.client.view.gui.utils.HorizontalEquallyDistributingElementContainer;
 import de.ativelox.rummyz.client.view.gui.utils.IElementContainer;
 import de.ativelox.rummyz.client.view.gui.utils.VerticalEvenlySpaceDistributingElementContainer;
@@ -125,8 +124,8 @@ public final class GameScreen implements IGameScreen, IElementAdjustCallback<IHo
 
 	mGraveyardView = new Stack<>();
 	mInnerFieldMapping = new HashMap<>();
-	mOnFieldView = new VerticalEvenlySpaceDistributingElementContainer<>(HAND_PADDING_LEFT, 50,
-		width - HAND_PADDING_LEFT - HAND_PADDING_RIGHT, height - 400, 20, 400);
+	mOnFieldView = new VerticalEvenlySpaceDistributingElementContainer<>(70, 50,
+		width - HAND_PADDING_LEFT - HAND_PADDING_RIGHT, height - 400, 20, ((width - (2 * 70)) / 3));
 
 	mHandView.register(this);
 
@@ -164,14 +163,30 @@ public final class GameScreen implements IGameScreen, IElementAdjustCallback<IHo
      * (non-Javadoc)
      * 
      * @see
+     * de.ativelox.rummyz.client.view.gui.screen.IGameScreen#addCardFromGraveyard()
+     */
+    @Override
+    public void addCardFromGraveyard() {
+	mHandView.addElement(mGraveyardView.pop());
+
+	if (mGraveyardView.size() > 0) {
+	    mRenderManager.add(mGraveyardView.peek());
+	}
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
      * de.ativelox.rummyz.client.view.gui.screen.IGameScreen#addCardsPlayed(java.
      * util.List)
      */
     @Override
     public void addCardsPlayed(final List<List<ICard>> cards, final String[] ids) {
 	for (int i = 0; i < ids.length; i++) {
-	    IElementContainer<IHoverable> inner = new HalfStackHorizontalEvenlyDistributingElementContainer<>(0, 0,
-		    mOnFieldView.getWidth(), GuiCard.HEIGHT);
+	    IElementContainer<IHoverable> inner = new HorizontalEquallyDistributingElementContainer<>(0, 0,
+		    ((mWidth - (2 * 70)) / 3) - 70, GuiCard.HEIGHT);
 
 	    final SnapArea leftSa = new SnapArea(0, 0, GuiCard.WIDTH, GuiCard.HEIGHT,
 		    EHoverLabel.CARD_PLAYED_SNAP_AREA);
@@ -240,7 +255,20 @@ public final class GameScreen implements IGameScreen, IElementAdjustCallback<IHo
 	mCardMapping.put(card, guiCard);
 	mReversedCardMapping.put(guiCard, card);
 	mRenderManager.add(guiCard);
+
 	mHandView.addElement(guiCard);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.ativelox.rummyz.client.view.gui.screen.IGameScreen#get(de.ativelox.rummyz.
+     * model.ICard)
+     */
+    @Override
+    public IHoverable get(final ICard card) {
+	return mCardMapping.get(card);
     }
 
     /*
@@ -383,6 +411,28 @@ public final class GameScreen implements IGameScreen, IElementAdjustCallback<IHo
     @Override
     public void onUnbind(final int index, final IHoverable spatial) {
 	this.mHandView.addElement(index, spatial);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.ativelox.rummyz.client.view.gui.screen.IGameScreen#removeGraveyardCard()
+     */
+    @Override
+    public void removeGraveyardCard() {
+	IHoverable view = mGraveyardView.pop();
+
+	mCardMapping.remove(mReversedCardMapping.get(view));
+	mReversedCardMapping.remove(view);
+
+	mRenderManager.remove(view);
+
+	if (mGraveyardView.size() > 0) {
+	    mRenderManager.add(mGraveyardView.peek());
+
+	}
 
     }
 

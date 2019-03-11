@@ -106,6 +106,10 @@ public final class ServerNetworkController extends ANetworkController<ES2C, EC2S
 	    mGc.onVictory(mPlayerId);
 	    break;
 
+	case GRAVEYARD_PICKUP:
+	    mGc.onGraveyardPickup(mPlayerId);
+	    break;
+
 	default:
 	    throw new UnsupportedProtocolException(
 		    "The protocol named " + EC2S.class.getName() + "." + protocol.toString() + " isn't supported.");

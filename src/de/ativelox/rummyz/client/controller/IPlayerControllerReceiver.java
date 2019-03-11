@@ -53,6 +53,14 @@ public interface IPlayerControllerReceiver {
     void onDefeat();
 
     /**
+     * Signifies that another player has taken a card from the grave yard. Doesn't
+     * get called on that player.
+     * 
+     * @param card The card that was taken. (the card at the top of the grave yard)
+     */
+    void onGraveyardDecrease(final ICard card);
+
+    /**
      * Signifies that this player should empty his grave yard (the server shuffled
      * the grave yard into its deck, since it was empty).
      */

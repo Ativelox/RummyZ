@@ -171,6 +171,19 @@ public final class GraphicalView extends AClientView<EC2S, ES2C> implements IBut
     /*
      * (non-Javadoc)
      * 
+     * @see de.ativelox.rummyz.client.view.IClientView#addCardFromGraveyard()
+     */
+    @Override
+    public void addCardFromGraveyard() {
+	super.addCardFromGraveyard();
+
+	mGameScreen.addCardFromGraveyard();
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see
      * de.ativelox.rummyz.client.view.AClientView#addCardsPlayed(java.util.List,
      * java.lang.String[])
@@ -281,6 +294,12 @@ public final class GraphicalView extends AClientView<EC2S, ES2C> implements IBut
 
 	}
 	if (snap.getLabel() == EHoverLabel.GRAVEYARD_SNAP_AREA) {
+	    if (bound == null) {
+		this.mPcSender.sendGraveyardPickupCard();
+		return true;
+
+	    }
+
 	    this.mPcSender.sendDiscardCard(mGameScreen.get(bound));
 	    this.mPcSender.sendTurnEnd();
 	    return true;
@@ -313,6 +332,19 @@ public final class GraphicalView extends AClientView<EC2S, ES2C> implements IBut
 
 	mGameScreen.removeOwnCard(card);
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.ativelox.rummyz.client.view.AClientView#removeCardFromGraveyard(boolean)
+     */
+    @Override
+    public void removeCardFromGraveyard() {
+	mGraveyard.pop();
+
+	mGameScreen.removeGraveyardCard();
     }
 
     /**

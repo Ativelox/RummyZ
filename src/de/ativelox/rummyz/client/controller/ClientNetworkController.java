@@ -122,6 +122,10 @@ public final class ClientNetworkController extends ANetworkController<EC2S, ES2C
 	    mPc.onGraveyardEmpty();
 	    break;
 
+	case GRAVEYARD_DECREASE:
+	    mPc.onGraveyardDecrease(NetworkUtils.decodeCard(additional));
+	    break;
+
 	default:
 	    throw new UnsupportedProtocolException(
 		    "The protocol named " + ES2C.class.getName() + "." + protocol.toString() + " isn't supported.");

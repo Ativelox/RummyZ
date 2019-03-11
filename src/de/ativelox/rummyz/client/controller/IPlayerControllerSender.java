@@ -56,6 +56,12 @@ public interface IPlayerControllerSender<POut, PIn> {
     void sendDrawCards(final int amount);
 
     /**
+     * Sends data to signify that this player has picked a card up from the grave
+     * yard.
+     */
+    void sendGraveyardPickupCard();
+
+    /**
      * Sends data to signify that this player has been accepted by the server and is
      * ready to play.
      */

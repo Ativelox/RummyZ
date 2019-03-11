@@ -29,6 +29,11 @@ public interface IGameScreen extends IScreen, IMoverCallback {
     void addAppendCard(final ICard card, final int superIndex, final int insertIndex);
 
     /**
+     * Adds the top card from the grave yard to the hand view.
+     */
+    void addCardFromGraveyard();
+
+    /**
      * Gets called when sequence of cards get added to the board.
      * 
      * @param cards The list of sequence of cards that get added to the board.
@@ -49,6 +54,14 @@ public interface IGameScreen extends IScreen, IMoverCallback {
      * @param card The card to add.
      */
     void addOwnCard(final ICard card);
+
+    /**
+     * Gets the graphical representation from the {@link ICard} given if present.
+     * 
+     * @param card The card to get the graphical representation from.
+     * @return The graphical representation of that card.
+     */
+    IHoverable get(final ICard card);
 
     /**
      * Gets the {@link ICard} from its graphical representation.
@@ -85,6 +98,11 @@ public interface IGameScreen extends IScreen, IMoverCallback {
      * 
      */
     void onGraveyardEmpty();
+
+    /**
+     * Completely removes the top card of the grave yard.
+     */
+    void removeGraveyardCard();
 
     /**
      * Removes a card from this screens own hand.

@@ -81,6 +81,17 @@ public abstract class AClientView<POut, PIn> implements IClientView<POut, PIn> {
     /*
      * (non-Javadoc)
      * 
+     * @see de.ativelox.rummyz.client.view.IClientView#addCardFromGraveyard()
+     */
+    @Override
+    public void addCardFromGraveyard() {
+	this.mGraveyard.pop();
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see
      * de.ativelox.rummyz.client.view.IClientView#addCardsPlayed(java.util.List,
      * java.lang.String[])
@@ -223,6 +234,18 @@ public abstract class AClientView<POut, PIn> implements IClientView<POut, PIn> {
     @Override
     public void removeCard(final ICard card) {
 	mHand.remove(card);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.ativelox.rummyz.client.view.IClientView#removeCardFromGraveyard(boolean)
+     */
+    @Override
+    public void removeCardFromGraveyard() {
+	this.mGraveyard.pop();
 
     }
 

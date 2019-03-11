@@ -3,6 +3,7 @@ package de.ativelox.rummyz.client.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import de.ativelox.rummyz.client.view.IClientView;
 import de.ativelox.rummyz.client.view.gui.GraphicalView;
@@ -39,6 +40,11 @@ public final class PlayerController implements IPlayerController<EC2S, ES2C> {
     private final IClientView<EC2S, ES2C> mView;
 
     /**
+     * The state of the current grave yard.
+     */
+    private final Stack<ICard> mGraveyard;
+
+    /**
      * The current network controller associated with this controller, handles
      * socket communication.
      */
@@ -56,6 +62,11 @@ public final class PlayerController implements IPlayerController<EC2S, ES2C> {
     private boolean mDidInitial;
 
     /**
+     * Whether the player has taken a card from the grave yard this turn or not.
+     */
+    private boolean mTookCardsThisTurn;
+
+    /**
      * Creates a new {@link PlayerController}. Also calls {@link Assets#init()}.
      * 
      * @param player The player this controller manages.
@@ -66,6 +77,7 @@ public final class PlayerController implements IPlayerController<EC2S, ES2C> {
 
 	mView = new GraphicalView(1, 2);
 	mOnFieldCards = new HashMap<>();
+	mGraveyard = new Stack<>();
 
 	mDidInitial = false;
 
@@ -146,10 +158,25 @@ public final class PlayerController implements IPlayerController<EC2S, ES2C> {
      * (non-Javadoc)
      * 
      * @see de.ativelox.rummyz.client.controller.IPlayerControllerReceiver#
+     * onGraveyardDecrease(de.ativelox.rummyz.model.ICard)
+     */
+    @Override
+    public void onGraveyardDecrease(final ICard card) {
+	mGraveyard.pop();
+	mView.removeCardFromGraveyard();
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.ativelox.rummyz.client.controller.IPlayerControllerReceiver#
      * onGraveyardEmpty()
      */
     @Override
     public void onGraveyardEmpty() {
+	mGraveyard.clear();
+
 	mView.onGraveyardEmpty();
 
     }
@@ -162,6 +189,8 @@ public final class PlayerController implements IPlayerController<EC2S, ES2C> {
      */
     @Override
     public void onGraveyardUpdate(final ICard card) {
+	mGraveyard.add(card);
+
 	mView.addCardToGraveyard(card);
 
     }
@@ -199,6 +228,8 @@ public final class PlayerController implements IPlayerController<EC2S, ES2C> {
      */
     @Override
     public void onTurnStart() {
+	mTookCardsThisTurn = false;
+
 	mView.onTurnStart();
 
     }
@@ -325,6 +356,28 @@ public final class PlayerController implements IPlayerController<EC2S, ES2C> {
     @Override
     public void sendDrawCards(final int amount) {
 	this.mNetworkController.send(EC2S.DRAW_CARDS, new String[] { amount + "" });
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.ativelox.rummyz.client.controller.IPlayerControllerSender#
+     * sendGraveyardPickupCard()
+     */
+    @Override
+    public void sendGraveyardPickupCard() {
+	if (mTookCardsThisTurn || mGraveyard.size() <= 0) {
+	    mView.invalidPlay();
+	    return;
+
+	}
+	mView.addCardFromGraveyard();
+	mPlayer.getCards().add(mGraveyard.peek());
+
+	mTookCardsThisTurn = true;
+
+	mNetworkController.send(EC2S.GRAVEYARD_PICKUP);
 
     }
 

@@ -205,6 +205,18 @@ public final class GameController implements IGameController<ES2C, EC2S> {
     /*
      * (non-Javadoc)
      * 
+     * @see de.ativelox.rummyz.server.controller.IGameControllerReceiver#
+     * onGraveyardPickup(int)
+     */
+    @Override
+    public void onGraveyardPickup(final int playerId) {
+	this.sendExcluding(ES2C.GRAVEYARD_DECREASE, NetworkUtils.encodeCard(mGraveyard.pop()), playerId);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see de.ativelox.rummyz.server.controller.IGameController#onReady(int)
      */
     @Override
